@@ -1,0 +1,37 @@
+name: Deploy Cloud Task API
+on:
+    pull_request:
+        types:
+            - closed
+    workflow_dispatch:
+
+jobs:
+    lints:
+        name: Linting and Code Quality
+        runs-on: Ubuntu-latest
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v5
+            
+            - name: Set Up Python
+              uses: actions/setup-python@v5
+              with:
+                python-version: "3.14"
+                
+            - name: Install Dependencies
+              run: |
+                python3 -m pip install --upgrade pip
+                cd flask_app
+                pip3 install -r requirements.txt
+            - name: Check Import (Isort)
+              run: |
+                isort flask_app --check-only --diff
+
+            - name: Check Formatting (Black)
+              run: |
+                black flask_app --check
+
+            - name: Lint with Flake8
+              run: |
+                flake8 flask_app
+    
