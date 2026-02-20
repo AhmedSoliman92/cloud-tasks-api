@@ -7,14 +7,14 @@ def test_process_pending_task(mock_db, mock_log_action, mocker):
     mocker.patch("time.sleep")
 
     # Mock pending task
-    mck_tsk = Task(id='123', status='pending', payload={})
+    mck_tsk = Task(id="123", status="pending", payload={})
     mock_db.query.return_value.filter.return_value.first.return_value = mck_tsk
 
     # Run worker logic
     process_pending_task()
 
     # Verify interactions
-    assert mck_tsk.status == 'done'
+    assert mck_tsk.status == "done"
 
     # Verify log calls (pickup and complete)
     assert mock_log_action.call_count == 2
