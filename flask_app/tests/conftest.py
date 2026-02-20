@@ -1,6 +1,8 @@
 import os
 from unittest.mock import MagicMock
+
 import pytest
+
 from app import app
 
 # Set testing environment variable
