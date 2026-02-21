@@ -39,10 +39,10 @@ jobs:
         environment: development
         steps:
             - name: Checkout Repo
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
 
             - name: Setup Python Environment
-              uses: ./github/python-env-setup
+              uses: ./.github/actions/python-env-setup
               with:
                 python-version: ${{ env.PYTHON_VERSION }}
                 cache-key-suffix: preparation-${{ env.PYTHON_VERSION}}
