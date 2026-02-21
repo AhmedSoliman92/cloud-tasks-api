@@ -52,11 +52,15 @@ jobs:
                 sudo systemctl start postgresql.service
                 sudo -u postgres psql -c 'select 1' || sleep 6
                 sudo -u postgres psql -c "ALTER USER postgres PASSWORD '${{ secrets.DB_PASSWORD }}'"
-                sudo -u postgres psql -c 'create database task_db'
+                sudo -u postgres psql -c 'create database ${{ secrets.DB_NAME }}'
             
             - name: Run Tests
               env:
                 DB_URL: ${{ secrets.DB_URL }}
+                DB_USER: ${{ secrets.DB_USER }}
+                DB_PASS: ${{ secrets.DB_PASSWORD }}
+                DB_HOST: ${{ secrets.DB_HOST }}
+                DB_NAME: ${{ secrets.DB_NAME }}
               working-directory: flask_app
               run: |
                 python3 -m pytest
