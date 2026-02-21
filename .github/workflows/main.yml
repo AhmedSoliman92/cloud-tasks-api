@@ -5,6 +5,8 @@ on:
             - closed
     workflow_dispatch:
 
+env:
+  PYTHON_VERSION: "3.14.2"
 jobs:
     lints:
         name: Linting and Code Quality
@@ -13,16 +15,11 @@ jobs:
             - name: Checkout Repository
               uses: actions/checkout@v5
             
-            - name: Set Up Python
-              uses: actions/setup-python@v5
+            - name: Python Environment Setup
+              uses: ./.github/actions/python-env-setup
               with:
-                python-version: "3.14"
-                
-            - name: Install Dependencies
-              run: |
-                python3 -m pip install --upgrade pip
-                cd flask_app
-                pip3 install -r requirements.txt
+                python-version: ${{ env.PYTHON_VERSION }}
+                cache-key-suffix: "preperation-${{ env.PYTHON_VERSION}}"
             - name: Check Import (Isort)
               run: |
                 isort flask_app --check-only --diff
@@ -35,3 +32,30 @@ jobs:
               run: |
                 flake8 flask_app
     
+    tests:
+        name: Run Tests
+        runs-on: Ubuntu-latest
+        needs: lints
+        environment: development
+        steps:
+            - name: Checkout Repo
+              uses: actions/checkout@v4
+
+            - name: Setup Python Environment
+              uses: ./github/python-env-setup
+              with:
+                python-version: ${{ env.PYTHON_VERSION }}
+                cache-key-suffix: preparation-${{ env.PYTHON_VERSION}}
+
+            - name: Activate PostgreSQL
+              run: |
+                sudo systemctl start postgresql.service
+                sudo -u postgres psql -c 'select 1' || sleep 6
+                sudo -u postgres psql -c "ALTER USER postgres PASSWORD '${{ secrets.DB_PASSWORD }}'"
+                sudo -u postgres psql -c 'create database task_db'
+            
+            - name: Run Tests
+              env:
+                DB_URL: ${{ secrets.DB_URL }}
+              run: |
+                python3 -m pytest
