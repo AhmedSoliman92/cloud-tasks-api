@@ -36,7 +36,7 @@ jobs:
         name: Run Tests
         runs-on: Ubuntu-latest
         needs: lints
-        environment: development
+        environment: ${{ github.ref_name == 'main' && 'production' || 'development' }}
         steps:
             - name: Checkout Repo
               uses: actions/checkout@v5
@@ -64,3 +64,6 @@ jobs:
               working-directory: flask_app
               run: |
                 python3 -m pytest
+
+    Artifact_Provisioning:
+      runs-on: ubuntu-latest
