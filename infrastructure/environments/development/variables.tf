@@ -21,3 +21,8 @@ variable "gcp_services_list" {
         "secretmanager.googleapis.com"
      ]
   }
+
+variable "password" {
+    type = string
+    sensitive = true  
+}

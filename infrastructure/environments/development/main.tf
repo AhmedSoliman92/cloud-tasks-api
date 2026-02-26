@@ -33,3 +33,13 @@ module "service_account" {
 
     depends_on = [ time_sleep.wait_minute ]
 }
+
+module "secrets" {
+    source      = "../../modules/secrets"
+    
+    project_id  = "${var.project_id}-dev"
+    secret_id   = "db-password-dev"
+    secret_data = var.password
+
+    depends_on = [ time_sleep.wait_minute ]
+}
