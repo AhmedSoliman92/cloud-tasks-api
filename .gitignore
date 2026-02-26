@@ -209,3 +209,8 @@ __marimo__/
 
 # Mac General
 .DS_Store
+
+
+# Terraform:
+.terraform.lock.hcl
+.terraform
