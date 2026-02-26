@@ -69,3 +69,31 @@ module "cloud_sql" {
 
     depends_on = [ time_sleep.wait_minute ]
 }
+
+module "cloud_run" {
+    source = "../../modules/cloud_run"
+
+    project_id                         = "${var.project_id}-dev"
+    region                             = var.region
+    service_name                       = "cloud-task-api-dev"
+    image                              = var.image
+    service_account_email              = module.service_account.email
+    cloud_sql_instance_connection_name = module.cloud_sql.connection_name
+    # secret_version_dependencies        = [module.secrets.id]
+    # iam_dependencies                   = [ module.service_account.secret_accessor_binding ]
+    invokers                           = ["allUsers"]
+    subnet_id                          = module.vpc.subnet_id
+    vpc_network_id                     = module.vpc.network_id
+    env_vars                           = {
+      DB_HOST = "cloudsql/${module.cloud_sql.connection_name}"
+      DB_NAME = module.cloud_sql.database_name
+      DB_USER = module.cloud_sql.username
+      ENV     = "dev"
+    }
+    secrets                            = {
+        DB_PASS = "db-password-dev"
+        FLASK_SECRET = "flask-secret-dev"
+    }
+
+    depends_on = [ module.secrets, module.service_account ]
+}
