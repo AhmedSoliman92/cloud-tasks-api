@@ -54,3 +54,18 @@ module "artifact_registry" {
 
     depends_on = [ module.vpc]
 }
+
+module "cloud_sql" {
+    source = "../../modules/cloud_sql"
+    
+    project_id          = "${var.project_id}-dev"
+    region              = var.region
+    database_name       = "task-db-dev"
+    deletion_protection = false
+    instance_name       = "task-instance-dev"
+    vpc_network_id      = module.vpc.network_id
+    username            = "soli"
+    password            = var.password
+
+    depends_on = [ time_sleep.wait_minute ]
+}
