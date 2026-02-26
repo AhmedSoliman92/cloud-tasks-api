@@ -97,3 +97,14 @@ module "cloud_run" {
 
     depends_on = [ module.secrets, module.service_account ]
 }
+
+module "loadbalancer" {
+    source = "../../modules/loadbalancer"
+
+    project_id = "${var.project_id}-dev"
+    region = var.region
+    prefix_name = "cloud-task-api-lb-dev"
+    cloud_run_service_name = module.cloud_run.service_name
+
+    depends_on = [ time_sleep.wait_minute ]
+}
