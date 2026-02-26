@@ -23,3 +23,13 @@ module "vpc" {
 
     depends_on = [ time_sleep.wait_minute ]
 }
+
+module "service_account" {
+    source       = "../../modules/iam"
+    
+    project_id   =  "${var.project_id}-dev"
+    account_id   = "cloud-task-api-service-dev"
+    display_name = "Cloud Task API Service Account"
+
+    depends_on = [ time_sleep.wait_minute ]
+}
