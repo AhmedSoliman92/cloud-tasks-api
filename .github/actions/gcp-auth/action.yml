@@ -1,0 +1,21 @@
+name: "GCP Auth"
+description: "Authentication to GCP via WIF"
+
+inputs:
+  provider:
+    description: "WIF Provider String"
+    required: true
+  service_account:
+    description: "Service Account Email"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - id: 'auth'
+      uses: google-github-actions/auth@v3
+      with:
+        workload_identity_provider: ${{ inputs.provider }}
+        service_account: ${{ inputs.service_account }}
+    - name: "Setup Cloud SDK"
+      uses: 'google-github-actions/setup-gcloud@v2'

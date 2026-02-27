@@ -1,10 +1,12 @@
 name: Deploy Cloud Task API
 on:
-    pull_request:
-        types:
-            - closed
+    push:
+      branches: [main, dev]
     workflow_dispatch:
 
+permissions:
+  contents: read
+  id-token: write
 env:
   PYTHON_VERSION: "3.14.2"
 jobs:
@@ -64,3 +66,32 @@ jobs:
               working-directory: flask_app
               run: |
                 python3 -m pytest
+    
+    Build_and_Push:
+      runs-on: ubuntu-latest
+      needs: tests
+      environment: ${{ github.ref_name == 'main' && 'production' || 'development'}}
+      steps:
+        - name: Checkout Code
+          uses: actions/checkout@v5
+        
+        - name: Setup GCP
+          uses: ./.github/actions/gcp-auth
+          with:
+            provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+            service_account: ${{ secrets.SA_GITHUB }}
+        
+        - name: Configure Docker
+          run: gcloud auth configure-docker ${{ vars.REGION }}-docker.pkg.dev
+  
+        - name: Docker Build
+          id: build_step
+          run: |
+            IMAGE_TAG=${{vars.REGION}}-docker.pkg.dev/${{vars.PROJECT_ID}}/cloud-task-api-${{ github.ref == 'main' && 'prod' || 'dev' }}/${{vars.IMAGE_NAME}}:${{ github.sha}}
+            echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
+            docker build -t $IMAGE_TAG ./flask_app
+        
+        - name: Push Image
+          run: |
+            echo "Pushing image: $IMAGE_TAG"
+            docker push $IMAGE_TAG
