@@ -4,6 +4,9 @@ on:
       branches: [main, dev]
     workflow_dispatch:
 
+permissions:
+  contents: read
+  id-token: write
 env:
   PYTHON_VERSION: "3.14.2"
 jobs:
