@@ -1,8 +1,7 @@
 name: Deploy Cloud Task API
 on:
-    pull_request:
-        types:
-            - closed
+    push:
+      branches: [main, dev]
     workflow_dispatch:
 
 env:
