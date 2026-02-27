@@ -87,7 +87,7 @@ jobs:
         - name: Docker Build
           id: build_step
           run: |
-            IMAGE_TAG=${{vars.REGION}}-docker.pkg.dev/${{vars.PROJECT_ID}}/cloud-task-api-${{ github.ref == 'main' && 'prod' || 'dev' }}/${{vars.IMAGE_NAME}}:${{ github.sha}}
+            IMAGE_TAG=${{vars.REGION}}-docker.pkg.dev/${{vars.PROJECT_ID}}/cloud-task-api-${{ github.ref_name == 'main' && 'prod' || 'dev' }}/${{vars.IMAGE_NAME}}:${{ github.sha}}
             echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
             docker build -t $IMAGE_TAG ./flask_app
         
