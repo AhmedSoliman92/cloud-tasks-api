@@ -214,6 +214,5 @@ __marimo__/
 # Terraform:
 .terraform.lock.hcl
 .terraform
-terraform.tfstate
-terraform.tfvars
+terraform*
 bootstrap/
