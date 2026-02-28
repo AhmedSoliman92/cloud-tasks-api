@@ -4,7 +4,7 @@ variable "project_id" {
 
 variable "region" {
     type = string
-    default = "europe-west1"
+    default = "europe-west3"
 }
 
 variable "gcp_services_list" {
