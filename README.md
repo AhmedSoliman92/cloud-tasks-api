@@ -105,16 +105,16 @@ Stores:
 ## 9. CI/CD Design
 ```mermaid
 graph TD;
-    A[GitHub push] --> B[Check Import (Isort)]
-    B --> C[Check Formatting (Black)]
-    C --> D[Lint with Flake8]
-    D --> E[Tests with pytest]
-    E --> F[Docker Build]
-    F --> G[Push Image to Artifact Registry]
-    G --> H[Terraform Init]
-    H --> I[Terraform Plan]
-    I --> J[Terraform Apply]
-    J --> K[Cloud Run Deploy]
+    A[GitHub push] --> B["Check Import (Isort)"];
+    B --> C["Check Formatting (Black)"];
+    C --> D[Lint with Flake8];
+    D --> E[Tests with pytest];
+    E --> F[Docker Build];
+    F --> G[Push Image to Artifact Registry];
+    G --> H[Terraform Init];
+    H --> I[Terraform Plan];
+    I --> J[Terraform Apply];
+    J --> K[Cloud Run Deploy];
 ```
 
 ## 10. Terraform Design
