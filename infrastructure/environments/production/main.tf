@@ -86,7 +86,7 @@ module "cloud_run" {
     subnet_id                          = module.vpc.subnet_id
     vpc_network_id                     = module.vpc.network_id
     env_vars                           = {
-      DB_HOST = "cloudsql/${module.cloud_sql.connection_name}"
+      DB_HOST = "/cloudsql/${module.cloud_sql.connection_name}"
       DB_NAME = module.cloud_sql.database_name
       DB_USER = module.cloud_sql.username
       ENV     = "prod"
