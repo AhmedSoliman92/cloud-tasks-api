@@ -31,7 +31,7 @@ resource "google_cloud_run_service" "this" {
         metadata {
           annotations = {
             "run.googleapis.com/cloudsql-instances" = var.cloud_sql_instance_connection_name
-            "run.googleapis.com/vpc-access-egress"  = "private-range-only"
+            "run.googleapis.com/vpc-access-egress"  = "private-ranges-only"
             "run.googleapis.com/network-interfaces" = jsonencode(
               [
                 {
