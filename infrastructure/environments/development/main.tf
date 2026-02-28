@@ -45,16 +45,16 @@ module "secrets" {
     depends_on = [ time_sleep.wait_minute ]
 }
 
-module "artifact_registry" {
-    source        = "../../modules/artifact_registry"
+# module "artifact_registry" {
+#     source        = "../../modules/artifact_registry"
     
-    project_id    = "${var.project_id}-dev"
-    environment   = "dev"
-    region        = var.region
-    repository_id = "cloud-task-api-dev"
+#     project_id    = "${var.project_id}-dev"
+#     environment   = "dev"
+#     region        = var.region
+#     repository_id = "cloud-task-api-dev"
 
-    depends_on = [ module.vpc]
-}
+#     depends_on = [ module.vpc]
+# }
 
 module "cloud_sql" {
     source = "../../modules/cloud_sql"
