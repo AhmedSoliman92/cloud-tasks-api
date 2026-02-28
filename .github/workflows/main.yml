@@ -95,3 +95,39 @@ jobs:
           run: |
             echo "Pushing image: $IMAGE_TAG"
             docker push $IMAGE_TAG
+
+    Infrastruture_Provisioning:
+      runs-on: ubuntu-latest
+      needs: Build_and_Push
+      environment: ${{ github.ref_name == 'main' && 'production' || 'development' }}
+      steps:
+        - name: Code Checkout
+          uses: actions/checkout@v5
+        
+        - name: Setup GCP
+          uses: ./.github/actions/gcp-auth
+          with:
+            provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+            service_account: ${{ secrets.SA_GITHUB }}
+        
+        - name: Setup Terraform
+          uses: hashicorp/setup-terraform@v3
+        
+        - name: Terraform init
+          working-directory: ./infrastructure/environments/${{ github.ref_name == 'main' && 'production' || 'development' }}
+          run: terraform init
+        
+        - name: Terraform Plan
+          working-directory: ./infrastructure/environments/${{ github.ref_name == 'main' && 'production' || 'development' }}
+          run: | 
+            IMAGE_TAG=${{vars.REGION}}-docker.pkg.dev/${{vars.PROJECT_ID}}/cloud-task-api-${{ github.ref_name == 'main' && 'prod' || 'dev' }}/${{vars.IMAGE_NAME}}:${{ github.sha}}
+            echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
+            terraform plan -var="image=$IMAGE_TAG" \
+            -var="project_id=${{ vars.PROJECT_ID }}" \
+            -var="password=${{ secrets.DB_PASSWORD }}" \
+            -var="region=${{ vars.REGION }}" \
+            -out=terraform.tfplan
+        
+        - name: Terraform Apply
+          working-directory: ./infrastructure/environments/${{ github.ref_name == 'main' && 'production' || 'development' }}
+          run: terraform apply terraform.tfplan
