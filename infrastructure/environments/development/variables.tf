@@ -11,7 +11,7 @@ variable "gcp_services_list" {
     description = "APIs list which are necessay for GCO resources"
     type = list(string)
     default = [ 
-        "artifact_registry.googleapis.com",
+        "artifactregistry.googleapis.com",
         "compute.googleapis.com",
         "servicenetworking.googleapis.com",
         "sqladmin.googleapis.com",
