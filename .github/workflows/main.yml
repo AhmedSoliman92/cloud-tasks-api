@@ -9,6 +9,7 @@ permissions:
   id-token: write
 env:
   PYTHON_VERSION: "3.14.2"
+  ENV: ${{ github.ref_name == 'main' && 'prod' || 'dev' }}
 jobs:
     lints:
         name: Linting and Code Quality
@@ -87,7 +88,7 @@ jobs:
         - name: Docker Build
           id: build_step
           run: |
-            IMAGE_TAG=${{vars.REGION}}-docker.pkg.dev/${{vars.PROJECT_ID}}/cloud-task-api-${{ github.ref_name == 'main' && 'prod' || 'dev' }}/${{vars.IMAGE_NAME}}:${{ github.sha}}
+            IMAGE_TAG=${{vars.REGION}}-docker.pkg.dev/${{vars.PROJECT_ID}}-${{ env.ENV}}/cloud-task-api-${{ env.ENV}}/${{vars.IMAGE_NAME}}:${{ github.sha}}
             echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
             docker build -t $IMAGE_TAG ./flask_app
         
@@ -120,7 +121,7 @@ jobs:
         - name: Terraform Plan
           working-directory: ./infrastructure/environments/${{ github.ref_name == 'main' && 'production' || 'development' }}
           run: | 
-            IMAGE_TAG=${{vars.REGION}}-docker.pkg.dev/${{vars.PROJECT_ID}}/cloud-task-api-${{ github.ref_name == 'main' && 'prod' || 'dev' }}/${{vars.IMAGE_NAME}}:${{ github.sha}}
+            IMAGE_TAG=${{vars.REGION}}-docker.pkg.dev/${{vars.PROJECT_ID}}-${{ env.ENV }}/cloud-task-api-${{ env.ENV }}/${{vars.IMAGE_NAME}}:${{ github.sha}}
             echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
             terraform plan -var="image=$IMAGE_TAG" \
             -var="project_id=${{ vars.PROJECT_ID }}" \
