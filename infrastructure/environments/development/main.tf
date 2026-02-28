@@ -30,6 +30,7 @@ module "service_account" {
     project_id   =  "${var.project_id}-dev"
     account_id   = "cloud-task-api-service-dev"
     display_name = "Cloud Task API Service Account"
+    environment = "dev"
 
     depends_on = [ time_sleep.wait_minute ]
 }

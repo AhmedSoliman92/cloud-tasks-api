@@ -23,5 +23,5 @@ resource "google_project_iam_member" "app_permissions" {
 resource "google_service_account_iam_member" "this" {
   service_account_id = google_service_account.this.name
   role               = "roles/iam.serviceAccountUser"
-  member             = "github-actions@${var.project_id}.iam.gserviceaccount.com"
+  member             = "serviceAccount:github-actions-${var.environment}@${var.project_id}.iam.gserviceaccount.com"
 }
