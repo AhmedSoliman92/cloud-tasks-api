@@ -125,6 +125,7 @@ jobs:
             echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
             terraform plan -var="image=$IMAGE_TAG" \
             -var="project_id=${{ vars.PROJECT_ID }}" \
+            -var="username=${{ secrets.DB_USER}}" \
             -var="password=${{ secrets.DB_PASSWORD }}" \
             -var="region=${{ vars.REGION }}" \
             -out=terraform.tfplan

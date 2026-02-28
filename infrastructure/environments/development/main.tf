@@ -65,7 +65,7 @@ module "cloud_sql" {
     deletion_protection = false
     instance_name       = "task-instance-dev"
     vpc_network_id      = module.vpc.network_id
-    username            = "soli"
+    username            = var.username
     password            = var.password
 
     depends_on = [ time_sleep.wait_minute ]

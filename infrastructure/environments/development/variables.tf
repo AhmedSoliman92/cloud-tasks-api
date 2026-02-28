@@ -23,6 +23,10 @@ variable "gcp_services_list" {
      ]
   }
 
+variable "username" {
+    type = string  
+}
+
 variable "password" {
     type = string
     sensitive = true  
