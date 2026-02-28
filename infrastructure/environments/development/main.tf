@@ -93,7 +93,6 @@ module "cloud_run" {
     }
     secrets                            = {
         DB_PASS = "db-password-dev"
-        FLASK_SECRET = "flask-secret-dev"
     }
 
     depends_on = [ module.secrets, module.service_account ]
