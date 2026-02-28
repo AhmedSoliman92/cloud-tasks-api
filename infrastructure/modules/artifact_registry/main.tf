@@ -1,5 +1,5 @@
 resource "google_project_service" "artifact_registry_api" {
-    service            = "artifact_registry.googleapis.com"
+    service            = "artifactregistry.googleapis.com"
     disable_on_destroy = false
 }
 
